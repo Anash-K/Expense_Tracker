@@ -5,6 +5,8 @@ const ExpensesList = ({ expensesData }) => {
   const renderComponent = ({ item }) => {
     return <ExpenseItem dataItem={item} />;
   };
+
+
   return (
     <View style={styles.container}>
       <FlatList
