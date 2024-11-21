@@ -54,7 +54,7 @@ const ExpensesOverview = () => {
               name="hourglass"
               size={size}
               color={color}
-              style={{ fontWeight: "bold" }}
+              style={styles.bottomIcons}
             />
           ),
         }}
@@ -65,7 +65,7 @@ const ExpensesOverview = () => {
         options={{
           title: "All Expenses",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="history" size={size} color={color} />
+            <FontAwesome5 name="history" size={size} color={color} style={styles.bottomIcons} />
           ),
         }}
       />
@@ -119,5 +119,7 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     padding: 4,
     borderRadius: 20,
-  },
+  },bottomIcons:{
+   
+  }
 });

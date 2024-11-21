@@ -1,17 +1,29 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-const InputField = ({ label, textInputConfig , style }) => {
+const InputField = ({ label, textInputConfig, style, isInValid }) => {
   let inputStyle = [styles.input];
-
 
   if (textInputConfig.multiline) {
     inputStyle = [styles.multiLine];
   }
 
   return (
-    <View style={[styles.container,style]}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput style={inputStyle} {...textInputConfig} />
+    <View style={[styles.container, style]}>
+      <Text
+        style={[
+          styles.label,
+          isInValid ? styles.errorLabel : styles.normalLabel,
+        ]}
+      >
+        {label}
+      </Text>
+      <TextInput
+        style={[
+          inputStyle,
+          isInValid ? styles.errorBorder : styles.normalBorder,
+        ]}
+        {...textInputConfig}
+      />
     </View>
   );
 };
@@ -22,23 +34,31 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#333",
     marginBottom: 4,
   },
-  input: {
-    height: 35,
+  normalLabel: {
+    color: "#333",
+  },
+  errorLabel: {
+    color: "red",
+  },
+  errorBorder: {
+    borderColor: "red",
+  },
+  normalBorder: {
     borderColor: "#ccc",
+  },
+  input: {
+    paddingVertical:10,
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 10,
     fontSize: 16,
     backgroundColor: "#fff",
-    
   },
-  multiLine: { 
+  multiLine: {
     height: 100,
     textAlignVertical: "top",
-    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 10,

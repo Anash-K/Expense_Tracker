@@ -1,21 +1,24 @@
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import IconButton from "../components/IconButtton";
 import { GlobalStyles } from "../components/constants/styles";
 import CustomButton from "../components/CustomButton";
 import { ExpensesContext } from "../store/expenses_context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { deleteExpenseData, getExpenses, storeExpense, updateExpenseData } from "../utils/http";
 
 const { View, Text, Pressable, StyleSheet } = require("react-native");
 
 const ManageExpenses = ({ route }) => {
+
+
   const { id } = route.params || {};
 
   const isEditing = !!id;
 
   const navigator = useNavigation();
 
-  const { expenses, deleteExpense, addExpense, updateExpense } =
+  const { expenses, deleteExpense, addExpense, updateExpense ,  } =
     useContext(ExpensesContext);
 
   useLayoutEffect(() => {
@@ -28,7 +31,14 @@ const ManageExpenses = ({ route }) => {
 
 
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
+  
+    try {
+      const deleteResponse =  await deleteExpenseData(id);
+  
+    } catch (error) {
+     
+    }
     deleteExpense(id);
     navigator.goBack();
   };
@@ -37,12 +47,25 @@ const ManageExpenses = ({ route }) => {
     navigator.goBack();
   };
 
-  const handleAction = (expenseData) => {
+
+  
+
+  const handleAction =  async (expenseData) => {
     if (isEditing) {
-      updateExpense(id, expenseData);
+      try {
+        updateExpense(id, expenseData);
+
+        let response = await updateExpenseData(id,expenseData);
+        
+      } catch (error) {
+     
+      }
+      
     } else {
-      addExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      addExpense({...expenseData,id:id});
     }
+    
     navigator.goBack();
   };
 
@@ -50,7 +73,7 @@ const ManageExpenses = ({ route }) => {
     <View style={styles.container}>
       <ExpenseForm
         isEditing={isEditing}
-        OnCancel={handleCancel}
+        onCancel={handleCancel}
         onSubmit={handleAction}
         defaultValues={selectedExpense}
       />

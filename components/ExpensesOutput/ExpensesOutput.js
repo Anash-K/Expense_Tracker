@@ -4,18 +4,21 @@ import { GlobalStyles } from "../constants/styles";
 import { useContext } from "react";
 import ExpensesList from "./ExpensesList";
 
-const ExpensesOutput = ({ expenses, expensePeriod , fallBackText }) => {
-  let content = <Text style={styles.infoText}>{fallBackText}</Text>;
+const ExpensesOutput = ({ expenses, expensePeriod, fallBackText }) => {
+  let content = (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.infoText}>{fallBackText}</Text>
+    </View>
+  );
 
   if (expenses.length > 0) {
-    content =  <ExpensesList expensesData={expenses} />;
+    content = <ExpensesList expensesData={expenses} />;
   }
-
 
   return (
     <View style={styles.container}>
       <ExpensesSummary periodName={expensePeriod} expenses={expenses} />
-     {content}
+      {content}
     </View>
   );
 };
@@ -23,9 +26,25 @@ const ExpensesOutput = ({ expenses, expensePeriod , fallBackText }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
-  infoText: {},
+  infoText: {
+    color: GlobalStyles.colors.primary50,
+    fontSize:16,
+    fontWeight:'bold'
+  },
+  emptyContainer: {
+    marginHorizontal: 14,
+    marginVertical:22,
+    padding: 12,
+    backgroundColor: GlobalStyles.colors.secondary700,
+    elevation: 3,
+    shadowColor: GlobalStyles.colors.gray500,
+    shadowOffset: { width: 1, height: 3 },
+    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    borderRadius: 8,
+    minHeight:65
+  },
 });
 
 export default ExpensesOutput;

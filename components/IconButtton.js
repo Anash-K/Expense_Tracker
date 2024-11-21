@@ -11,7 +11,7 @@ const IconButton = ({ IconName, size, color, customStyles, onPress }) => {
         pressed && styles.pressed,
       ]}
     >
-      <View>
+      <View style={styles.innerContainer}>
         <FontAwesome5Icon name={IconName} size={size} color={color} />
       </View>
     </Pressable>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   container: {
     opacity: 1,
     padding: 10,
-    paddingRight:20,
+    paddingRight: 20,
     justifyContent: "center",
     alignItems: "center",
   },
