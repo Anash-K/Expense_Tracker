@@ -4,22 +4,28 @@ import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 import { ExpensesContext } from "../store/expenses_context";
 import { getDateMinusDays } from "../utils/formateDate";
 import { getExpenses } from "../utils/http";
+import LoadingSpinner from "../components/ui/Loading";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 const { View, StyleSheet } = require("react-native");
 
 const RecentExpenses = () => {
   const data = useContext(ExpensesContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const[error,setError] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getExpenses();
-        data.setExpenses(response); 
+        data.setExpenses(response);
       } catch (error) {
-  
+        setError("Couldn't fetch Expenses!");
+      } finally {
+        setIsLoading(false);
       }
     };
-  
+
     fetchData();
   }, [data]);
 
@@ -29,10 +35,26 @@ const RecentExpenses = () => {
     return expense.date >= sevenDaysAgo && expense.date <= today;
   });
 
+  const handleConfirm = () =>{
+    setError(null);
+  }
+
+  if(error && !isLoading){
+    return <ErrorOverlay message={error} onConfirm={handleConfirm}/>
+  }
+
 
   return (
     <View style={styles.container}>
-      <ExpensesOutput expenses={recentExpenses} expensePeriod={"Last 7 Days"} fallBackText={"No Expense Right Now..."}  />
+       {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <ExpensesOutput
+          expenses={recentExpenses}
+          expensePeriod={"Total"}
+          fallBackText={"No Expense Right Now ..."}
+        />
+      )}
     </View>
   );
 };

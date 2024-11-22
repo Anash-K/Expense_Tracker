@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { GlobalStyles } from "./constants/styles";
+import { GlobalStyles } from "../constants/styles";
 import { Children } from "react";
 
 const CustomButton = ({ buttonTitle, onPress, mode, style }) => {

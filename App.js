@@ -10,8 +10,10 @@ import ManageExpenses from "./screens/ManageExpenses";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GlobalStyles } from "./components/constants/styles";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import IconButton from "./components/IconButtton";
+import IconButton from "./components/ui/IconButtton"
 import ExpenseContextProvider from "./store/expenses_context";
+import LoginScreen from "./screens/LoginScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -73,18 +75,34 @@ const ExpensesOverview = () => {
   );
 };
 
+
+
 export default function App() {
   return (
     <ExpenseContextProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="ExpensesOverview"
+          initialRouteName="Login"
           screenOptions={{
             headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
             headerTintColor: "white",
             contentStyle: { backgroundColor: GlobalStyles.colors.primary700 },
           }}
         >
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              title: "Login",
+            }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={{
+              title: "Sign Up",
+            }}
+          />
           <Stack.Screen
             name="ExpensesOverview"
             component={ExpensesOverview}

@@ -2,7 +2,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import InputField from "./InputField";
 import { GlobalStyles } from "../constants/styles";
 import { useContext, useState } from "react";
-import CustomButton from "../CustomButton";
+import CustomButton from "../ui/CustomButton";
 import { getFormateDate } from "../../utils/formateDate";
 
 const ExpenseForm = ({ isEditing, onCancel, onSubmit, defaultValues }) => {
@@ -22,13 +22,15 @@ const ExpenseForm = ({ isEditing, onCancel, onSubmit, defaultValues }) => {
   });
 
   const handleChange = (inputIdentifier, expense) => {
-    setInputs((prevState) => {
-      return {
-        ...prevState,
-        [inputIdentifier]: { value: expense, isValid: true },
-      };
-    });
+    if(inputIdentifier == "description"){
+      debugger;
+    }
+    setInputs((prevState) => ({
+      ...prevState,
+      [inputIdentifier]: { value: expense, isValid: true },
+    }));
   };
+  
 
   const handleSubmit = () => {
     const expenseData = {
@@ -80,7 +82,7 @@ const ExpenseForm = ({ isEditing, onCancel, onSubmit, defaultValues }) => {
           isInValid={!inputs.amount.isValid}
           textInputConfig={{
             keyboardType: "decimal-pad",
-            onChangeText: handleChange.bind(null, "amount"),
+            onChangeText: (value) => handleChange("amount", value),
             value: inputs.amount.value,
           }}
         />
@@ -94,7 +96,7 @@ const ExpenseForm = ({ isEditing, onCancel, onSubmit, defaultValues }) => {
             placeholder: "YYYY-MM-DD",
             maxLength: 10,
             value: inputs.date.value,
-            onChangeText: handleChange.bind(null, "date"),
+            onChangeText: (value) => handleChange("date", value),
           }}
         />
       </View>
@@ -105,7 +107,7 @@ const ExpenseForm = ({ isEditing, onCancel, onSubmit, defaultValues }) => {
         textInputConfig={{
           onChangeText: handleChange,
           multiline: true,
-          onChangeText: handleChange.bind(null, "description"),
+          onChangeText: (value) => handleChange("description", value),
           value: inputs.description.value,
         }}
       />
