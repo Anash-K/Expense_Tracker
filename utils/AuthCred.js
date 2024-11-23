@@ -1,6 +1,7 @@
 import { createUser } from "./http";
 
 export default function submitHandler(credentials) {
+  
     let { email, confirmEmail, password, confirmPassword } = credentials;
 
     email = email.trim();

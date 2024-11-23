@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Text,
   View,
@@ -9,55 +9,51 @@ import {
   Button,
   Pressable,
 } from "react-native";
+import AuthContent from "../Auth/AuthContent";
+import LoadingSpinner from "../components/ui/Loading";
+import { createUser } from "../utils/http";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { AuthContext } from "../store/auth_context";
 
 const SignUpScreen = () => {
   const navigator = useNavigation();
+  const {authenticate} = useContext(AuthContext);
 
-  const [userCredential,setUserCredential] = useState({
-    email:{value:"",isValid:true},
-    password:{value:"",isValid:true},
-    confirmPassword:{value:"",isValid:true},
-  });
+  const [isAuthenticating,setIsAuthenticating] = useState(false);
+  const [error ,setError] = useState();
 
-  const handleLogin = () => {
-    navigator.navigate("Login");
-  };
-
-  const handleSignUp = () =>{
+  const signUpHandler = async({email,password}) =>{
+    try {
+      setIsAuthenticating(true);
+      let response = await createUser(email,password);
+      if(response){
+        authenticate(response);
+      }
+    } catch (error) {
+      setError("Something Went Wrong!!, please Try Again");
+    }finally{
+      setIsAuthenticating(false);
+    }
+ 
 
   }
 
+  if(isAuthenticating){
+    return <LoadingSpinner/>
+  }
+
+  const handleConfirmation = () =>{
+    setError(null);
+  }
+
+  if(!isAuthenticating && error){
+    return <ErrorOverlay message={error} onConfirm={handleConfirmation} />
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#aaa"
-        keyboardType="email-address"
-        value={userCredential.email.value}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#aaa"
-        secureTextEntry
-        value={userCredential.password.value}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor="#aaa"
-        secureTextEntry
-        value={userCredential.confirmPassword.value}
-      />
-      <Pressable style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </Pressable>
-      <Text style={styles.footerText}>Already have an account? </Text>
-      <Button title="Login" onPress={handleLogin} />
-    </View>
+    <AuthContent isLogin={false} onAuthenticate={signUpHandler} />
   );
+  
 };
 
 const styles = StyleSheet.create({

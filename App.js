@@ -10,10 +10,13 @@ import ManageExpenses from "./screens/ManageExpenses";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GlobalStyles } from "./components/constants/styles";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import IconButton from "./components/ui/IconButtton"
+import IconButton from "./components/ui/IconButtton";
 import ExpenseContextProvider from "./store/expenses_context";
 import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import AuthContextProvider, { AuthContext } from "./store/auth_context";
+import { useContext } from "react";
+import MyProfile from "./screens/MyProfile";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -67,7 +70,27 @@ const ExpensesOverview = () => {
         options={{
           title: "All Expenses",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="history" size={size} color={color} style={styles.bottomIcons} />
+            <FontAwesome5
+              name="history"
+              size={size}
+              color={color}
+              style={styles.bottomIcons}
+            />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="MyProfile"
+        component={MyProfile}
+        options={{
+          title: "My Profile",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5
+              name="user"
+              size={size}
+              color={color}
+              style={styles.bottomIcons}
+            />
           ),
         }}
       />
@@ -75,51 +98,79 @@ const ExpensesOverview = () => {
   );
 };
 
+const AuthStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+        headerTintColor: "white",
+        contentStyle: { backgroundColor: GlobalStyles.colors.primary700 },
+      }}
+    >
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          title: "Login",
+        }}
+      />
+      <Stack.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={{
+          title: "Sign Up",
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
+const ResourceStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="ExpensesOverview"
+      screenOptions={{
+        headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+        headerTintColor: "white",
+        contentStyle: { backgroundColor: GlobalStyles.colors.primary700 },
+      }}
+    >
+      <Stack.Screen
+        name="ExpensesOverview"
+        component={ExpensesOverview}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ManageExpenses"
+        component={ManageExpenses}
+        options={{
+          presentation: "modal",
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const Navigation = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
+  return (
+    <NavigationContainer>
+      {isAuthenticated ? <ResourceStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
+};
 
 export default function App() {
   return (
-    <ExpenseContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-            headerTintColor: "white",
-            contentStyle: { backgroundColor: GlobalStyles.colors.primary700 },
-          }}
-        >
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              title: "Login",
-            }}
-          />
-          <Stack.Screen
-            name="SignUp"
-            component={SignUpScreen}
-            options={{
-              title: "Sign Up",
-            }}
-          />
-          <Stack.Screen
-            name="ExpensesOverview"
-            component={ExpensesOverview}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="ManageExpenses"
-            component={ManageExpenses}
-            options={{
-              presentation: "modal",
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ExpenseContextProvider>
+    <AuthContextProvider>
+      <ExpenseContextProvider>
+        <Navigation />
+      </ExpenseContextProvider>
+    </AuthContextProvider>
   );
 }
 
@@ -137,7 +188,6 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     padding: 4,
     borderRadius: 20,
-  },bottomIcons:{
-   
-  }
+  },
+  bottomIcons: {},
 });

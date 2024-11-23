@@ -14,6 +14,7 @@ export const GlobalStyles = {
       gray700: '#221c30',
       secondary200:'#9c8ef5',
       secondary500:'#715eeb',
-      secondary700:'#5c5fef'
+      secondary700:'#5c5fef',
+      primary100: '#f9beda',
     },
   };
