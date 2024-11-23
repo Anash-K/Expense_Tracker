@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../store/auth_context";
 
-const {token} = useContext(AuthContext);
+
 
 const FIREBASE_API = {
   BASE_URL: "https://reactnative-learning-d9bdf-default-rtdb.firebaseio.com",
